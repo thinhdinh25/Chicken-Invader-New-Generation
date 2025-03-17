@@ -1,20 +1,62 @@
-// LTNC-VS2022.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+#include "iostream"
+#include <SDL.h>
+#include <SDL_image.h>
 
-#include <iostream>
 
-int main()
+SDL_Window* g_windows = NULL;
+SDL_Surface* gScreenSurface = NULL;
+SDL_Surface* g_background = NULL;
+
+
+bool loadMedia()
 {
-    std::cout << "Hello World!\n";
+    bool success = true;
+    g_background = IMG_Load("background.png");
+    if (g_background == NULL)
+    {
+        success = false;
+    }
+
+    return success;
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+void close()
+{
+    SDL_FreeSurface(g_background);
+    g_background = NULL;
+    SDL_DestroyWindow(g_windows);
+    g_windows = NULL;
+    SDL_Quit();
+}
+
+bool init()
+{
+    bool success = true;
+    if (SDL_Init(SDL_INIT_VIDEO) >= 0)
+    {
+        g_windows = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 960, SDL_WINDOW_SHOWN);
+        if (g_windows != NULL)
+        {
+            gScreenSurface = SDL_GetWindowSurface(g_windows);
+        }
+    }
+    return success;
+}
+
+
+int main(int argc, char* argv[])
+{
+    if (init() == true)
+    {
+        if (loadMedia())
+        {
+            SDL_BlitSurface(g_background, NULL, gScreenSurface, NULL);
+            SDL_UpdateWindowSurface(g_windows);
+            SDL_Delay(2000);
+        }
+    }
+
+    close();
+    return 0;
+}
