@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/LTNC-VS2022.vcxproj
+/LTNC-VS2022.vcxproj.filters
