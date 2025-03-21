@@ -1,5 +1,5 @@
 #include <iostream>
-#include <BaseObject.h>
+#include "BaseObject.h"
 
 BaseObject::BaseObject() {
 	p_object_ = NULL;
@@ -13,7 +13,7 @@ BaseObject::~BaseObject() {
 	Free();
 }
 
-bool BaseObject::LoadImg(std::string path, SDL_Renderer* screen) {
+bool BaseObject::LoadImg(const std::string& path, SDL_Renderer* screen) {
 	SDL_Texture* new_texture = NULL;
 	SDL_Surface* load_surface = IMG_Load(path.c_str());
 	if (load_surface != NULL) {

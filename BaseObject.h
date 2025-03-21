@@ -1,7 +1,7 @@
 #ifndef BASE_OBJECT_H_
 #define	BASE_OBJECT_H_
 
-#include <CommonFunc.h>
+#include "CommonFunc.h"
 
 class BaseObject 
 {
@@ -12,7 +12,7 @@ public:
 	SDL_Rect GetRect() const { return rect_; }
 	SDL_Texture* GetObject() const { return p_object_; }
 
-	bool LoadImg(std::string path, SDL_Renderer* screen);
+	bool LoadImg(const std::string& path, SDL_Renderer* screen);
 	void Render(SDL_Renderer* des, const SDL_Rect* clip = NULL);
 	void Free();
 
@@ -23,4 +23,4 @@ protected:
 
 
 
-#endif 
+#endif
