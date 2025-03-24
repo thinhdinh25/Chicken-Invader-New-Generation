@@ -1,7 +1,7 @@
 #ifndef COMMON_FUNCTION_H_
 #define COMMON_FUNCTION_H_
 
-#include <Windows.h>
+#include <windows.h>
 #include <string>
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -13,21 +13,24 @@ static SDL_Renderer* g_screen = NULL;
 static SDL_Event g_event;
 
 //Screen
+const int FRAME_PER_SECOND = 60;
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 640;
 const int SCREEN_BPP = 32;
 
 //Color
-const int COLOR_KEY_R = 167;
-const int COLOR_KEY_G = 175;
-const int COLOR_KEY_B = 180;
+const int COLOR_KEY_R = 0;
+const int COLOR_KEY_G = 0;
+const int COLOR_KEY_B = 0;
 
 const int RENDER_DRAW_COLOR = 255;
 
 
 #define TILE_SIZE 64
-#define MAX_MAP_X 400
-#define MAX_MAP_Y 10
+#define MAX_MAP_X 1280
+#define MAX_MAP_Y 640
+
+
 
 //typedef struct Map {
 //	int start_x_;
@@ -46,7 +49,7 @@ typedef struct Input {
 	int right_;
 	int up_;
 	int down_;
-	int jump_;
+	int shoot_;
 
 };
 #endif
