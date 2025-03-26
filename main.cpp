@@ -3,6 +3,8 @@
 #include "BaseObject.h"
 #include "MainObject.h"
 #include "ImpTimer.h"
+#include "ThreatsObject.h"
+
 BaseObject g_background;
 
 
@@ -19,6 +21,7 @@ bool InitData() {
     else {
         //SDL_SetWindowFullscreen(g_window, SDL_WINDOW_FULLSCREEN);
         g_screen = SDL_CreateRenderer(g_window, -1, SDL_RENDERER_ACCELERATED);
+        //SDL_RenderSetLogicalSize(g_screen, 400, 300);
         if (g_screen == NULL) {
             success = false;
         }
@@ -63,7 +66,7 @@ int main(int argc, char* argv[])
     if (LoadBackground() == false) return -1;
 
     MainObject p_player;
-
+    ThreatsObject p_threat;
     bool is_quit = false;
 
     while (!is_quit) {
@@ -73,15 +76,19 @@ int main(int argc, char* argv[])
             if (g_event.type == SDL_QUIT) {
                 is_quit = true;
             }
-
             p_player.HandleInputAction(g_event, g_screen);
         }
         SDL_SetRenderDrawColor(g_screen, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
         SDL_RenderClear(g_screen);
 
         g_background.Render(g_screen, NULL);
+
+        p_player.HandleBullet(g_screen);
         p_player.DoPlayer();
         p_player.Show(g_screen);
+
+        p_threat.SpawnThreats(g_screen, 30);
+        p_threat.HandleAnimation(g_screen);
 
         SDL_RenderPresent(g_screen);
 

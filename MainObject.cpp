@@ -83,20 +83,13 @@ void MainObject::set_clips() {
 }
 
 void MainObject::Show(SDL_Renderer* des) {
-	//if (status_ == WALK_LEFT) {
-	//	LoadImg("img//") // check here
-	//}
-	//else if (status_ == WALK_RIGHT) {
-	//	LoadImg("img//") // check here
-	//}
-
 	LoadImg("img//character.png", des);
 	set_clips();
 	if (input_type_.left_ == 1 || input_type_.right_ == 1) {
 		frame_++;
 	}
 	else frame_ = 0;
-
+	
 	if (frame_ >= 4) frame_ = 3;
 
 	rect_.x = x_pos_;
@@ -104,7 +97,7 @@ void MainObject::Show(SDL_Renderer* des) {
 
 	SDL_Rect* current_clip = &frame_clip_[frame_];
 
-	SDL_Rect renderQuad = { rect_.x, rect_.y, width_frame_, height_frame_ };
+	SDL_Rect renderQuad = { rect_.x, rect_.y, width_frame_*SCALE_NUMBER, height_frame_*SCALE_NUMBER };
 
 	SDL_RenderCopy(des, p_object_, current_clip, &renderQuad);
 
@@ -151,7 +144,13 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen) {
 		break;
 		case SDLK_SPACE:
 		{
-			input_type_.shoot_ = 1;
+			BulletObject* p_bullet = new BulletObject();
+			p_bullet->LoadImg("img//shot.bmp", screen);
+			p_bullet->SetRect(this->rect_.x + width_frame_/2 - 10 , rect_.y + height_frame_);
+			p_bullet->set_y_val(20);
+			p_bullet->set_is_move(true);
+
+			p_bullet_list_.push_back(p_bullet);
 		}
 		break;
 		default:
@@ -194,12 +193,35 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen) {
 		break;
 		case SDLK_SPACE:
 		{
-			input_type_.shoot_ = 0;
+
 		}
 		break;
 		}
 	}
 }
+
+void MainObject::HandleBullet(SDL_Renderer* des) {
+	for (unsigned int i = 0; i < p_bullet_list_.size(); i++) {
+		BulletObject* p_bullet = p_bullet_list_.at(i);
+		if (p_bullet != NULL) {
+			if (p_bullet->get_is_move() == true) {
+				p_bullet->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT);
+				p_bullet->Render(des);
+			}
+			else {
+
+				p_bullet_list_.erase(p_bullet_list_.begin() + i);
+				if (p_bullet != NULL) {
+					delete p_bullet;
+					p_bullet = NULL;
+				}
+			}
+		}
+	}
+}
+
+
+
 
 void MainObject::DoPlayer() {
 	x_val_ = 0;
@@ -217,12 +239,7 @@ void MainObject::DoPlayer() {
 	else if (input_type_.down_ == 1) {
 		y_val_ += PLAYER_SPEED;
 	}
-	else if (input_type_.shoot_ == 1) {
-		MainObject bullet_;
-		//bullet_.LoadImg("img//shot.bmp");
-		//
 
-	} 
 	x_pos_ += x_val_;
 	y_pos_ += y_val_;
 
