@@ -209,7 +209,6 @@ void MainObject::HandleBullet(SDL_Renderer* des) {
 				p_bullet->Render(des);
 			}
 			else {
-
 				p_bullet_list_.erase(p_bullet_list_.begin() + i);
 				if (p_bullet != NULL) {
 					delete p_bullet;
@@ -220,7 +219,17 @@ void MainObject::HandleBullet(SDL_Renderer* des) {
 	}
 }
 
-
+void MainObject::RemoveBullet(const int& idx) {
+	unsigned int size = p_bullet_list_.size();
+	if (size > 0 && idx < size) {
+		BulletObject* p_bullet = p_bullet_list_.at(idx);
+		p_bullet_list_.erase(p_bullet_list_.begin() + idx);
+		if (p_bullet) {
+			delete p_bullet;
+			p_bullet = NULL;
+		}
+	}
+}
 
 
 void MainObject::DoPlayer() {

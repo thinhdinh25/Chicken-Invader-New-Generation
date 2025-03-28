@@ -5,6 +5,7 @@
 #include "ImpTimer.h"
 #include "ThreatsObject.h"
 
+#include <iostream>
 BaseObject g_background;
 
 
@@ -87,8 +88,63 @@ int main(int argc, char* argv[])
         p_player.DoPlayer();
         p_player.Show(g_screen);
 
-        p_threat.SpawnThreats(g_screen, 30);
+        p_threat.SpawnThreats(g_screen, 32);
         p_threat.HandleAnimation(g_screen);
+        p_threat.HandleThreatBullet(g_screen);
+
+        // check collision between bullet and threats
+        std::vector<BulletObject*> bullet_arr = p_player.get_bullet_list();
+        for (unsigned int i = 0; i < bullet_arr.size(); i++) {
+            BulletObject* p_bullet = bullet_arr.at(i);
+            if (p_bullet != NULL) {
+                std::vector<ThreatsObject*> threat_arr = p_threat.get_threat_list();
+                for (unsigned int j = 0; j < threat_arr.size(); j++) {
+                    ThreatsObject* obj_threat = threat_arr.at(j);
+                    if (obj_threat != NULL) {
+                        SDL_Rect tRect;
+                        tRect.x = obj_threat->GetRect().x;
+                        tRect.y = obj_threat->GetRect().y;
+                        tRect.w = obj_threat->get_width_frame();
+                        tRect.h = obj_threat->get_height_frame();
+
+                        SDL_Rect bRect = p_bullet->GetRect();
+
+                        bool bCol = SDLCommonFunc::CheckCollision(bRect, tRect);
+                        if (bCol) {
+                            p_player.RemoveBullet(i);
+                            obj_threat->Free();
+                            p_threat.RemoveThreat(j);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        //check collision between character and threat and threat object
+        std::vector<ThreatsObject*> threat_arr = p_threat.get_threat_list();
+        for (unsigned int i = 0; i < threat_arr.size(); i++) {
+            ThreatsObject* obj_threat = threat_arr.at(i);
+            if (obj_threat != NULL) {
+                SDL_Rect tRect;
+                tRect.x = obj_threat->GetRect().x;
+                tRect.y = obj_threat->GetRect().y;
+                tRect.w = obj_threat->get_width_frame();
+                tRect.h = obj_threat->get_height_frame();
+
+                SDL_Rect bRect;
+                bRect.x = p_player.GetRect().x;
+                bRect.y = p_player.GetRect().y;
+                bRect.w = p_player.get_width_frame();
+                bRect.h = p_player.get_height_frame();
+                bool bCol = SDLCommonFunc::CheckCollision(bRect, tRect);
+                if (bCol) {
+                    std::cout << "game over";
+                }
+            }
+        }
+
+
 
         SDL_RenderPresent(g_screen);
 

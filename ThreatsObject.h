@@ -5,7 +5,7 @@
 #include "CommonFunc.h"
 #include "BaseObject.h"
 
-#define THREAT_FRAME_NUM 8
+#define THREAT_FRAME_NUM 10
 
 class ThreatsObject : public BaseObject {
 
@@ -23,20 +23,26 @@ public:
 
 	void SetMapXY(const int& xMap, const int& yMap) { map_x = xMap; map_y = yMap; }
 
-	void Set_clips();
+	void set_clips();
 	virtual bool LoadImg(std::string path, SDL_Renderer* screen);
 	void Show(SDL_Renderer* des);
 	int get_width_frame() const { return width_frame_; }
 	int get_height_frame() const { return height_frame_; }
-	void DoPlayer();
 	void HandleAnimation(SDL_Renderer* des);
 	void SpawnThreats(SDL_Renderer* des, int number);
 	void HandleMove(const int& x_border, const int& y_border);
-
-	void LoadAnimationFrames(SDL_Renderer* renderer);
+	void update_frame(int frameVal) { frame_ = frameVal; }
+	int get_frame() const { return frame_; }
+	void update_frame_increase_(bool frame_increaseVal) { frame_increase_ = frame_increaseVal; }
+	int get_frame_increase() const { return frame_increase_; }
+	std::vector<ThreatsObject*> get_threat_list() const { return p_threat_list_; }
+	void RemoveThreat(const int& idx);
+	bool get_is_move() const { return is_move_; }
+	void HandleThreatBullet(SDL_Renderer* des);
 
 private:
 	std::vector<ThreatsObject*> p_threat_list_;
+	std::vector<ThreatsObject*> threat_bullet_list_;
 	int map_x;
 	int map_y;
 	float x_val_;
@@ -49,7 +55,7 @@ private:
 	int height_frame_;
 	int frame_;
 	bool frame_increase_;
-
+	bool is_move_;
 
 
 };
