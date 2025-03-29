@@ -7,7 +7,7 @@
 
 #include <iostream>
 BaseObject g_background;
-
+int scrollingOffset = 0;
 
 
 bool InitData() {
@@ -21,9 +21,10 @@ bool InitData() {
     }
     else {
         //SDL_SetWindowFullscreen(g_window, SDL_WINDOW_FULLSCREEN);
-        g_screen = SDL_CreateRenderer(g_window, -1, SDL_RENDERER_ACCELERATED);
+        g_screen = SDL_CreateRenderer(g_window, -1, SDL_RENDERER_ACCELERATED );
         //SDL_RenderSetLogicalSize(g_screen, 400, 300);
-        if (g_screen == NULL) {
+        //SDL_RenderSetScale(g_screen, 2.5, 2.5);
+        if (g_screen == NULL) { 
             success = false;
         }
         else {
@@ -38,7 +39,7 @@ bool InitData() {
 }
 
 bool LoadBackground() {
-    bool ret = g_background.LoadImg("img//620478.jpg", g_screen);
+    bool ret = g_background.LoadImg("img//620478.png", g_screen);
     if (ret == false) {
         printf("Failed to load background image! SDL_image Error: %s\n", IMG_GetError());
         return false;
@@ -67,6 +68,8 @@ int main(int argc, char* argv[])
     if (LoadBackground() == false) return -1;
 
     MainObject p_player;
+    p_player.set_x_pos(SCREEN_WIDTH / 2);
+    p_player.set_y_pos(SCREEN_HEIGHT * 4 / 5);
     ThreatsObject p_threat;
     bool is_quit = false;
 
@@ -79,18 +82,36 @@ int main(int argc, char* argv[])
             }
             p_player.HandleInputAction(g_event, g_screen);
         }
+
         SDL_SetRenderDrawColor(g_screen, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
         SDL_RenderClear(g_screen);
 
+
+
+        // Moving background down
+        ++scrollingOffset;
+        if (scrollingOffset >= g_background.GetRect().h)
+        {
+            scrollingOffset = 0;
+        }
+
+        // Render the first background image
+        g_background.SetRect(0, scrollingOffset - g_background.GetRect().h);
         g_background.Render(g_screen, NULL);
+
+        // Render the second background image, ensuring seamless transition
+        g_background.SetRect(0, scrollingOffset);
+        g_background.Render(g_screen, NULL);
+
 
         p_player.HandleBullet(g_screen);
         p_player.DoPlayer();
         p_player.Show(g_screen);
 
-        p_threat.SpawnThreats(g_screen, 32);
+        p_threat.SpawnThreats(g_screen, 5);
         p_threat.HandleAnimation(g_screen);
         p_threat.HandleThreatBullet(g_screen);
+        p_threat.HandleBrokenEgg(g_screen);
 
         // check collision between bullet and threats
         std::vector<BulletObject*> bullet_arr = p_player.get_bullet_list();
@@ -104,11 +125,14 @@ int main(int argc, char* argv[])
                         SDL_Rect tRect;
                         tRect.x = obj_threat->GetRect().x;
                         tRect.y = obj_threat->GetRect().y;
-                        tRect.w = obj_threat->get_width_frame();
+                        tRect.w = obj_threat->get_width_frame()-40;
                         tRect.h = obj_threat->get_height_frame();
 
-                        SDL_Rect bRect = p_bullet->GetRect();
-
+                        SDL_Rect bRect;
+                        bRect.x = p_bullet->GetRect().x;
+                        bRect.y = p_bullet->GetRect().y;
+                        bRect.w = p_bullet->GetRect().w-20;
+                        bRect.h = p_bullet->GetRect().h;
                         bool bCol = SDLCommonFunc::CheckCollision(bRect, tRect);
                         if (bCol) {
                             p_player.RemoveBullet(i);

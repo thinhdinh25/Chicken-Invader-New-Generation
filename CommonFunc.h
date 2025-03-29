@@ -14,8 +14,8 @@ static SDL_Event g_event;
 
 //Screen
 const int FRAME_PER_SECOND = 60;
-const int SCREEN_WIDTH = 1920;
-const int SCREEN_HEIGHT = 1080;
+const int SCREEN_WIDTH = 1600;
+const int SCREEN_HEIGHT = 900;
 const int SCREEN_BPP = 32;
 const float SCALE_NUMBER = 1;
 
@@ -27,12 +27,6 @@ const int COLOR_KEY_B = 0;
 const int RENDER_DRAW_COLOR = 255;
 
 
-#define TILE_SIZE 64
-#define MAX_MAP_X 1280
-#define MAX_MAP_Y 640
-
-
-
 //typedef struct Map {
 //	int start_x_;
 //	int start_y_;
@@ -40,7 +34,7 @@ const int RENDER_DRAW_COLOR = 255;
 //	int max_x_;
 //	int max_y_;
 //
-//	int tile[MAX_MAP_Y][MAX_MAP_X];
+//	int tile[SCREEN_HEIGHT][SCREEN_WIDTH];
 //	char* file_name_;
 //
 //};

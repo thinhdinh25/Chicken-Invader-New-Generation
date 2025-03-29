@@ -20,6 +20,7 @@ public:
 
 	void HandleMove(const int& x_border, const int& y_border);
 
+
 private:
 	int x_val_;
 	int y_val_;

@@ -36,7 +36,9 @@ public:
 	void HandleBullet(SDL_Renderer* des);
 	void RemoveBullet(const int& idx);
 	int get_width_frame() const { return width_frame_; }
-	int get_height_frame() const { return height_frame_; }
+	int get_height_frame() const { return height_frame_;}
+	void set_x_pos(float xVal) { x_pos_ = xVal; }
+	void set_y_pos(float yVal) { y_pos_ = yVal; }
 
 private:
 	std::vector<BulletObject*> p_bullet_list_;

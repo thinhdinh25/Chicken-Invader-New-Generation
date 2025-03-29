@@ -13,7 +13,11 @@ public:
 	ThreatsObject();
 	~ThreatsObject();
 
-
+	enum MOVE_DIRECTION
+	{
+		LEFT = 1,
+		RIGHT = 0,
+	};
 	void set_x_val(const float& xVal) { x_val_ = xVal; }
 	void set_y_val(const float& yVal) { y_val_ = yVal; }
 	void set_x_pos(const float& xPos) { x_pos_ = xPos; }
@@ -40,9 +44,17 @@ public:
 	bool get_is_move() const { return is_move_; }
 	void HandleThreatBullet(SDL_Renderer* des);
 
+	void HandleExplosion(SDL_Renderer* des);
+	void set_egg_broken_clips();
+	void HandleBrokenEgg(SDL_Renderer* des);
+
+	void set_width_frame(float wFrame) { width_frame_ = wFrame; }
+
 private:
 	std::vector<ThreatsObject*> p_threat_list_;
 	std::vector<ThreatsObject*> threat_bullet_list_;
+	std::vector<ThreatsObject*> threat_explosion_;
+	std::vector<ThreatsObject*> broken_egg_list_;
 	int map_x;
 	int map_y;
 	float x_val_;
@@ -56,7 +68,9 @@ private:
 	int frame_;
 	bool frame_increase_;
 	bool is_move_;
+	bool move_direction_;
 
+	int exist_time_;
 
 };
 

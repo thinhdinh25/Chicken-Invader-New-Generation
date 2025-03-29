@@ -104,55 +104,49 @@ void MainObject::Show(SDL_Renderer* des) {
 }
 
 void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen) {
+	static bool space_held = false;
+
 	if (events.type == SDL_KEYDOWN) {
 		switch (events.key.keysym.sym) {
 		case SDLK_RIGHT:
-			{
-				status_ = WALK_RIGHT;
-				input_type_.right_ = 1;
-				input_type_.left_ = 0;
-				input_type_.up_ = 0;
-				input_type_.down_ = 0;
-			}
+			status_ = WALK_RIGHT;
+			input_type_.right_ = 1;
+			input_type_.left_ = 0;
+			input_type_.up_ = 0;
+			input_type_.down_ = 0;
 			break;
 		case SDLK_LEFT:
-			{
-				status_ = WALK_LEFT;
-				input_type_.left_ = 1;
-				input_type_.right_ = 0;
-				input_type_.up_ = 0;
-				input_type_.down_ = 0;
-			}
+			status_ = WALK_LEFT;
+			input_type_.left_ = 1;
+			input_type_.right_ = 0;
+			input_type_.up_ = 0;
+			input_type_.down_ = 0;
 			break;
 		case SDLK_UP:
-		{
 			status_ = WALK_UP;
 			input_type_.left_ = 0;
 			input_type_.right_ = 0;
 			input_type_.up_ = 1;
 			input_type_.down_ = 0;
-		}
-		break;
+			break;
 		case SDLK_DOWN:
-		{
 			status_ = WALK_DOWN;
 			input_type_.left_ = 0;
 			input_type_.right_ = 0;
 			input_type_.up_ = 0;
 			input_type_.down_ = 1;
-		}
-		break;
+			break;
 		case SDLK_SPACE:
-		{
-			BulletObject* p_bullet = new BulletObject();
-			p_bullet->LoadImg("img//shot.bmp", screen);
-			p_bullet->SetRect(this->rect_.x + width_frame_/2 - 10 , rect_.y + height_frame_);
-			p_bullet->set_y_val(20);
-			p_bullet->set_is_move(true);
-
-			p_bullet_list_.push_back(p_bullet);
-		}
-		break;
+			if (!space_held) {
+				space_held = true;
+				BulletObject* p_bullet = new BulletObject();
+				p_bullet->LoadImg("img//shot.png", screen);
+				p_bullet->SetRect(this->rect_.x + width_frame_ / 2 - 16, rect_.y);
+				p_bullet->set_y_val(3);
+				p_bullet->set_is_move(true);
+				p_bullet_list_.push_back(p_bullet);
+			}
+			break;
 		default:
 			break;
 		}
@@ -160,45 +154,21 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen) {
 	else if (events.type == SDL_KEYUP) {
 		switch (events.key.keysym.sym) {
 		case SDLK_RIGHT:
-		{
-			input_type_.right_ = 0;
-			input_type_.left_ = 0;
-			input_type_.up_ = 0;
-			input_type_.down_ = 0;
-		}
-		break;
 		case SDLK_LEFT:
-		{
-			input_type_.left_ = 0;
-			input_type_.right_ = 0;
-			input_type_.up_ = 0;
-			input_type_.down_ = 0;
-		}
-		break;
 		case SDLK_UP:
-		{
-			input_type_.left_ = 0;
-			input_type_.right_ = 0;
-			input_type_.up_ = 0;
-			input_type_.down_ = 0;
-		}
-		break;
 		case SDLK_DOWN:
-		{
-			input_type_.left_ = 0;
 			input_type_.right_ = 0;
+			input_type_.left_ = 0;
 			input_type_.up_ = 0;
 			input_type_.down_ = 0;
-		}
-		break;
+			break;
 		case SDLK_SPACE:
-		{
-
-		}
-		break;
+			space_held = false;
+			break;
 		}
 	}
 }
+
 
 void MainObject::HandleBullet(SDL_Renderer* des) {
 	for (unsigned int i = 0; i < p_bullet_list_.size(); i++) {
@@ -252,8 +222,8 @@ void MainObject::DoPlayer() {
 	x_pos_ += x_val_;
 	y_pos_ += y_val_;
 
-	x_pos_ = min(x_pos_, MAX_MAP_X);
-	y_pos_ = min(y_pos_, MAX_MAP_Y);
+	x_pos_ = min(x_pos_, SCREEN_WIDTH-width_frame_);
+	y_pos_ = min(y_pos_, SCREEN_HEIGHT-height_frame_);
 
 	x_pos_ = max(x_pos_, 0);
 	y_pos_ = max(y_pos_, 0);

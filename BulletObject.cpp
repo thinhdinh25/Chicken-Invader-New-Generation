@@ -14,6 +14,8 @@ BulletObject::~BulletObject() {
 void BulletObject::HandleMove(const int &x_border, const int &y_border) {
 	rect_.x += x_val_;
 	rect_.y -= y_val_;
+	y_val_++;    
+	y_val_ = min(15, y_val_);
 	if (rect_.x > x_border || rect_.y < 0) {
 		is_move_ = false;
 	}
