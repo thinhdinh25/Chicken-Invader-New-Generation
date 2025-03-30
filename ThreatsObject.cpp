@@ -117,7 +117,6 @@ void ThreatsObject::HandleBrokenEgg(SDL_Renderer* des) {
 		ThreatsObject* broken_egg = broken_egg_list_.at(i);
 		broken_egg->Show(des);
 		broken_egg->update_frame(min(21, broken_egg->get_frame() + 1));
-
 		if (SDL_GetTicks() - broken_egg->exist_time_ >= 3000) {
 			broken_egg_list_.erase(broken_egg_list_.begin() + i);
 			if (broken_egg != NULL) {

@@ -51,7 +51,7 @@ private:
 	int width_frame_;
 	int height_frame_;
 
-	SDL_Rect frame_clip_[4];
+	SDL_Rect frame_clip_[8];
 	Input input_type_;
 	int frame_;
 	int status_;
