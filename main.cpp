@@ -31,7 +31,7 @@ bool InitData() {
         success = false;
     }
     else {
-        g_screen = SDL_CreateRenderer(g_window, -1, SDL_RENDERER_ACCELERATED);
+        g_screen = SDL_CreateRenderer(g_window,-1, SDL_RENDERER_ACCELERATED);
         if (g_screen == NULL) {
             success = false;
         }
