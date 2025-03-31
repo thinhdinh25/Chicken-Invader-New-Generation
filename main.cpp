@@ -552,7 +552,7 @@ int main(int argc, char* argv[]) {
                     p_threat.RemoveBullet(i);
                 }
                 SetParameter(999, p_player, p_threat, high_score_list);
-                wave = 1;
+                g_background.LoadImg1("img//winning_bg.png",g_screen);
             }
 
             //Check Game Over
@@ -565,7 +565,6 @@ int main(int argc, char* argv[]) {
                     p_threat.RemoveBullet(i);
                 }
                 SetParameter(999, p_player, p_threat, high_score_list);
-                wave = 1;
 
             }
 
