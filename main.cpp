@@ -1,4 +1,4 @@
-#include "CommonFunc.h"
+﻿#include "CommonFunc.h"
 #include "BaseObject.h"
 #include "MainObject.h"
 #include "ImpTimer.h"
@@ -26,7 +26,7 @@ bool InitData() {
     int ret = SDL_Init(SDL_INIT_VIDEO);
     if (ret < 0) return false;
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
-    g_window = SDL_CreateWindow("Chicken Invader", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    g_window = SDL_CreateWindow("Chicken Invader New Generation", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (g_window == NULL) {
         success = false;
     }
