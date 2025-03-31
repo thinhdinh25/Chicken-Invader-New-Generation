@@ -13,6 +13,7 @@ public:
 	SDL_Texture* GetObject() const { return p_object_; }
 
 	bool LoadImg(const std::string& path, SDL_Renderer* screen);
+	bool LoadImg1(const std::string& path, SDL_Renderer* screen);
 	void Render(SDL_Renderer* des, const SDL_Rect* clip = NULL);
 	void Free();
 

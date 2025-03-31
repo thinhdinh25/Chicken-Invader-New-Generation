@@ -27,17 +27,7 @@ const int COLOR_KEY_B = 0;
 const int RENDER_DRAW_COLOR = 255;
 
 
-//typedef struct Map {
-//	int start_x_;
-//	int start_y_;
-//
-//	int max_x_;
-//	int max_y_;
-//
-//	int tile[SCREEN_HEIGHT][SCREEN_WIDTH];
-//	char* file_name_;
-//
-//};
+
 
 typedef struct Input {
 	int left_;
@@ -50,5 +40,7 @@ typedef struct Input {
 namespace SDLCommonFunc {
 	bool CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2);
 	bool Random();
+	void SaveToFile(const std::string& text, const long long& score);
+	std::string getTopScores(const std::string& filename, int topN = 10);
 }
 #endif

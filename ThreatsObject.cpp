@@ -147,6 +147,8 @@ void ThreatsObject::HandleAnimation(SDL_Renderer* des) {
 		p_threat->Show(des);
 		//threat bullet spawn
 		if (SDLCommonFunc::Random() && threat_bullet_list_.size() < 5 && threat_bullet_list_.size() < p_threat_list_.size()) {
+
+			Mix_PlayChannel(-1, Mix_LoadWAV("Sound//egg_spawn.wav"), 0);
 			ThreatsObject* obj_threat_bullet = new ThreatsObject();
 			obj_threat_bullet->LoadImg("img//egg.png", des);
 			obj_threat_bullet->SetRect(p_threat->get_x_pos() + p_threat->get_width_frame() / 2, p_threat->get_y_pos() + p_threat->get_height_frame());

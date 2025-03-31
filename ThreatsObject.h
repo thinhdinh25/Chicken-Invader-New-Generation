@@ -40,6 +40,7 @@ public:
 	void update_frame_increase_(bool frame_increaseVal) { frame_increase_ = frame_increaseVal; }
 	int get_frame_increase() const { return frame_increase_; }
 	std::vector<ThreatsObject*> get_threat_list() const { return p_threat_list_; }
+	std::vector<ThreatsObject*> get_threat_bullet_list() const { return threat_bullet_list_; }
 	void RemoveThreat(const int& idx);
 	bool get_is_move() const { return is_move_; }
 	void HandleThreatBullet(SDL_Renderer* des);
