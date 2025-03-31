@@ -1,6 +1,7 @@
 #include <iostream>
 #include "ThreatsObject.h"
 #include <string> 
+#include <cmath>
 
 ThreatsObject::ThreatsObject() {
 	width_frame_ = 0;
@@ -14,6 +15,12 @@ ThreatsObject::ThreatsObject() {
 	is_move_ = true;
 	move_direction_ = RIGHT;
 	exist_time_ = 0;
+	is_boss = false;
+	hit_count = 0;
+	hit_time_ = 0;
+	Gravity_Speed = 0;
+
+	int spawn_time = SDL_GetTicks();
 }
 
 ThreatsObject::~ThreatsObject() {
@@ -55,6 +62,8 @@ void ThreatsObject::set_egg_broken_clips() {
 
 void ThreatsObject::SpawnThreats(SDL_Renderer* des, int number) {
 	y_val_ = 50;
+	is_boss = false;
+
 	if (p_threat_list_.size() == 0) {
 		int i = 1;
 		while (i < number) {
@@ -77,6 +86,86 @@ void ThreatsObject::SpawnThreats(SDL_Renderer* des, int number) {
 
 	}
 }
+
+void ThreatsObject::SpawnThreatsTriangle(SDL_Renderer* des, int number) {
+	y_val_ = 50; 
+	int row = 1;  
+	is_boss = false;
+
+	int created = 0; 
+	ThreatsObject* p_threat = new ThreatsObject();
+	p_threat->LoadImg("img//chicken_sprite.png", des);
+	int threat_width = p_threat->get_width_frame();
+	delete p_threat;
+	if (p_threat_list_.size() == 0) {
+		while (created < number) {
+			int start_x = SCREEN_WIDTH / 2 - (row * (threat_width * SCALE_NUMBER + 10)) / 2;
+			int x_val_ = start_x;
+
+			for (int j = 0; j < row && created < number; ++j) {
+				ThreatsObject* p_threat = new ThreatsObject();
+				if (!p_threat->LoadImg("img//chicken_sprite.png", des)) {
+					delete p_threat;
+					continue;
+				}
+
+				p_threat->set_x_pos(x_val_);
+				p_threat->set_y_pos(y_val_);
+				p_threat->set_clips();
+				p_threat->frame_ = rand() % 28;
+				p_threat_list_.push_back(p_threat);
+
+				x_val_ += (threat_width * SCALE_NUMBER + 10);
+				++created;
+			}
+
+			y_val_ += (50 * SCALE_NUMBER + 20);
+			++row; 
+		}
+	}
+}
+
+void ThreatsObject::SpawnThreatsCircle(SDL_Renderer* des, int number) {
+	if (p_threat_list_.size() > 0) return;
+	is_boss = false;
+	const int centerX = SCREEN_WIDTH / 2;
+	const int centerY = SCREEN_HEIGHT / 3;
+	const int radius = 300;
+	const double angleStep = (2 * M_PI) / number;
+
+	for (int i = 0; i < number; ++i) {
+		double angle = i * angleStep;
+		int x_pos = centerX + radius * cos(angle);
+		int y_pos = centerY + radius * sin(angle);
+
+		ThreatsObject* p_threat = new ThreatsObject();
+		if (!p_threat->LoadImg("img//chicken_sprite.png", des)) {
+			delete p_threat;
+			continue; 
+		}
+
+		p_threat->set_x_pos(x_pos);
+		p_threat->set_y_pos(y_pos);
+		p_threat->set_clips();
+		p_threat->frame_ = rand() % 28;
+		p_threat_list_.push_back(p_threat);
+
+	}
+}
+
+void ThreatsObject::SpawnBoss(SDL_Renderer* des) {
+	if (p_threat_list_.size() > 0) return;
+	is_boss = true;
+	ThreatsObject* p_threat = new ThreatsObject();
+	p_threat->LoadImg("img//boss_spritesheet.png", des);
+	p_threat->set_x_pos(SCREEN_WIDTH/2 - p_threat->get_width_frame());
+	p_threat->set_y_pos(SCREEN_HEIGHT / 2 - p_threat->get_height_frame() - 50);
+	p_threat->set_clips();
+	p_threat->frame_ = rand() % 28;
+	p_threat_list_.push_back(p_threat);
+}
+
+
 void ThreatsObject::HandleThreatBullet(SDL_Renderer* des) {
 	for (unsigned int i = 0; i < threat_bullet_list_.size(); i++) {
 		ThreatsObject* p_bullet = threat_bullet_list_.at(i);
@@ -146,14 +235,34 @@ void ThreatsObject::HandleAnimation(SDL_Renderer* des) {
 		p_threat->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT);
 		p_threat->Show(des);
 		//threat bullet spawn
-		if (SDLCommonFunc::Random() && threat_bullet_list_.size() < 5 && threat_bullet_list_.size() < p_threat_list_.size()) {
+		if (SDL_GetTicks() - p_threat->spawn_time >= 1000) {
+			if (SDLCommonFunc::Random() && threat_bullet_list_.size() < 7 && threat_bullet_list_.size() < p_threat_list_.size()) {
+				if (is_boss) {
+					int a = 5;
+					int xVal = 0;
+					for (int i = 0; i < a; i++) {
+						Mix_PlayChannel(-1, Mix_LoadWAV("Sound//egg_spawn.wav"), 0);
+						ThreatsObject* obj_threat_bullet = new ThreatsObject();
+						obj_threat_bullet->LoadImg("img//egg.png", des);
+						obj_threat_bullet->SetRect(p_threat->get_x_pos() + p_threat->get_width_frame() / 2 + xVal, p_threat->get_y_pos() + p_threat->get_height_frame());
+						obj_threat_bullet->set_y_val(rand() % 6 + 3 + Gravity_Speed);
+						threat_bullet_list_.push_back(obj_threat_bullet);
+						if (move_direction_ == RIGHT) {
+							xVal += 20;
+						}
+						else xVal -= 20;
+					}
+				}
+				else {
+					Mix_PlayChannel(-1, Mix_LoadWAV("Sound//egg_spawn.wav"), 0);
+					ThreatsObject* obj_threat_bullet = new ThreatsObject();
+					obj_threat_bullet->LoadImg("img//egg.png", des);
+					obj_threat_bullet->SetRect(p_threat->get_x_pos() + p_threat->get_width_frame() / 2, p_threat->get_y_pos() + p_threat->get_height_frame());
+					obj_threat_bullet->set_y_val(rand() % 6 + 3 + Gravity_Speed);
+					threat_bullet_list_.push_back(obj_threat_bullet);
+				}
 
-			Mix_PlayChannel(-1, Mix_LoadWAV("Sound//egg_spawn.wav"), 0);
-			ThreatsObject* obj_threat_bullet = new ThreatsObject();
-			obj_threat_bullet->LoadImg("img//egg.png", des);
-			obj_threat_bullet->SetRect(p_threat->get_x_pos() + p_threat->get_width_frame() / 2, p_threat->get_y_pos() + p_threat->get_height_frame());
-			obj_threat_bullet->set_y_val(rand() % 6 + 3);
-			threat_bullet_list_.push_back(obj_threat_bullet);
+			}
 		}
 
 		int current_frame_ = p_threat->get_frame();
@@ -195,6 +304,40 @@ void ThreatsObject::RemoveThreat(const int& idx) {
 	if (size > 0 && idx < size) {
 		ThreatsObject* p_threat = p_threat_list_.at(idx);
 		p_threat_list_.erase(p_threat_list_.begin() + idx);
+		if (p_threat) {
+			delete p_threat;
+			p_threat = NULL;
+		}
+	}
+}
+
+void ThreatsObject::RemoveBullet(const int& idx) {
+	unsigned int size = threat_bullet_list_.size();
+	if (size > 0 && idx < size) {
+		ThreatsObject* p_threat = threat_bullet_list_.at(idx);
+		threat_bullet_list_.erase(threat_bullet_list_.begin() + idx);
+		if (p_threat) {
+			delete p_threat;
+			p_threat = NULL;
+		}
+	}
+}
+
+void ThreatsObject::RemoveAllBullet() {
+	for (int i = static_cast<int>(threat_bullet_list_.size()) - 1; i >= 0; i--) {
+			ThreatsObject* p_threat = threat_bullet_list_.at(i);
+			threat_bullet_list_.erase(threat_bullet_list_.begin() + i);
+			if (p_threat) {
+				delete p_threat;
+				p_threat = NULL;
+			}
+		}
+	}
+	
+void ThreatsObject::RemoveAllThreat() {
+	for (int i = static_cast<int>(p_threat_list_.size()) - 1; i >= 0; i--) {
+		ThreatsObject* p_threat = p_threat_list_.at(i);
+		p_threat_list_.erase(p_threat_list_.begin() + i);
 		if (p_threat) {
 			delete p_threat;
 			p_threat = NULL;

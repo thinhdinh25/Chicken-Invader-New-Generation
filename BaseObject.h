@@ -8,7 +8,7 @@ class BaseObject
 public:
 	BaseObject();
 	~BaseObject();
-	void SetRect(const int& x, const int& y) { rect_.x = x, rect_.y = y;}
+	void SetRect(const int x, const int y) { rect_.x = x, rect_.y = y;}
 	SDL_Rect GetRect() const { return rect_; }
 	SDL_Texture* GetObject() const { return p_object_; }
 

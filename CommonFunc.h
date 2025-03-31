@@ -8,6 +8,7 @@
 #include <SDL_mixer.h>
 #include <SDL_image.h>
 
+
 static SDL_Window* g_window = NULL;
 static SDL_Renderer* g_screen = NULL;
 static SDL_Event g_event;
@@ -41,6 +42,5 @@ namespace SDLCommonFunc {
 	bool CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2);
 	bool Random();
 	void SaveToFile(const std::string& text, const long long& score);
-	std::string getTopScores(const std::string& filename, int topN = 10);
 }
 #endif

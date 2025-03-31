@@ -24,6 +24,7 @@ public:
 
 	bool is_hovered_(SDL_Event &g_event);
 	bool is_clicked_(SDL_Event& g_event);
+	void state_change(SDL_Renderer* des, bool state, std::string path_hover, std::string path_normal);
 private:
 	int status_;
 	float width_frame_;
@@ -32,6 +33,7 @@ private:
 	int x_pos_;
 	int y_pos_;
 
+	bool is_hovered;
 };
 
 

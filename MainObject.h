@@ -50,6 +50,7 @@ public:
 	void ReSpawn(SDL_Renderer* des);
 
 	int get_is_shown() const { return is_shown; }
+	void ResetPlayer();
 
 private:
 	std::vector<BulletObject*> p_bullet_list_;

@@ -14,6 +14,10 @@ BaseObject::~BaseObject() {
 }
 
 bool BaseObject::LoadImg(const std::string& path, SDL_Renderer* screen) {
+	if (p_object_ != nullptr) {
+		SDL_DestroyTexture(p_object_);
+		p_object_ = nullptr;
+	}
 	SDL_Texture* new_texture = NULL;
 	SDL_Surface* load_surface = IMG_Load(path.c_str());
 	if (load_surface != NULL) {
@@ -31,6 +35,10 @@ bool BaseObject::LoadImg(const std::string& path, SDL_Renderer* screen) {
 }
 
 bool BaseObject::LoadImg1(const std::string& path, SDL_Renderer* screen) {
+	if (p_object_ != nullptr) {
+		SDL_DestroyTexture(p_object_);
+		p_object_ = nullptr;
+	}
 	SDL_Texture* new_texture = NULL;
 	SDL_Surface* load_surface = IMG_Load(path.c_str());
 	if (load_surface != NULL) {

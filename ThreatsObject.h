@@ -50,6 +50,18 @@ public:
 	void HandleBrokenEgg(SDL_Renderer* des);
 
 	void set_width_frame(float wFrame) { width_frame_ = wFrame; }
+	void RemoveBullet(const int& idx);
+	void SpawnThreatsTriangle(SDL_Renderer* des, int number);
+	void SpawnThreatsCircle(SDL_Renderer* des, int number);
+	void SpawnBoss(SDL_Renderer* des);
+	int GetHitCount() const { return hit_count; }
+	void UpdateHitCount(int countval) { hit_count = countval; }
+
+	int GetHitTime() const { return hit_time_; }
+	void UpdateHitTime() { hit_time_ = SDL_GetTicks(); }
+	void UpdateGravitySpeed(int speed) { Gravity_Speed+= speed; }
+	void RemoveAllBullet();
+	void RemoveAllThreat();
 
 private:
 	std::vector<ThreatsObject*> p_threat_list_;
@@ -72,7 +84,14 @@ private:
 	bool move_direction_;
 
 	int exist_time_;
+	bool is_boss;
+	int hit_count;
 
+	int hit_time_;
+
+	int Gravity_Speed;
+
+	int spawn_time;
 };
 
 #endif

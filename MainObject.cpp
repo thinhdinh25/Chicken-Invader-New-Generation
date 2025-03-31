@@ -26,6 +26,7 @@ MainObject::~MainObject() {
 }
 
 
+
 void MainObject::SpawnPlayer(SDL_Renderer* des) {
 	x_pos_ = SCREEN_WIDTH / 2;
 	y_pos_ = SCREEN_HEIGHT * 4 / 5;
@@ -38,6 +39,12 @@ void MainObject::SpawnPlayer(SDL_Renderer* des) {
 	p_shield->frame_num = 11;
 	p_shield->LoadImg("img//shield_spritesheet.png", des);
 	p_shield->set_clips();
+
+	input_type_.left_ = 0;
+	input_type_.right_ = 0;
+	input_type_.shoot_ = 0;
+	input_type_.up_ = 0;
+	input_type_.down_ = 0;
 }
 
 
@@ -139,13 +146,15 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screen) {
 			break;
 		case SDLK_SPACE:
 			if (!space_held) {
-				space_held = true;
-				BulletObject* p_bullet = new BulletObject();
-				p_bullet->LoadImg("img//shot.png", screen);
-				p_bullet->SetRect(this->rect_.x + width_frame_ / 2 - 16, rect_.y);
-				p_bullet->set_y_val(3);
-				p_bullet->set_is_move(true);
-				p_bullet_list_.push_back(p_bullet);
+				if (SDL_GetTicks() - dead_time >= 2000) {
+					space_held = true;
+					BulletObject* p_bullet = new BulletObject();
+					p_bullet->LoadImg("img//shot.png", screen);
+					p_bullet->SetRect(this->rect_.x + width_frame_ / 2 - 16, rect_.y);
+					p_bullet->set_y_val(3);
+					p_bullet->set_is_move(true);
+					p_bullet_list_.push_back(p_bullet);
+				}
 			}
 			break;
 		default:
@@ -244,6 +253,10 @@ void MainObject::DoPlayer(SDL_Renderer* des) {
 
 
 void MainObject::ReSpawn(SDL_Renderer* des) {
+	input_type_.left_ = 0;
+	input_type_.right_ = 0;
+	input_type_.up_ = 0;
+	input_type_.down_ = 0;
 	is_shown = 0;
 	dead_time = SDL_GetTicks();
 	SetRect(1 * SCREEN_WIDTH, 1 * SCREEN_HEIGHT);
@@ -257,5 +270,12 @@ void MainObject::ReSpawn(SDL_Renderer* des) {
 	p_explosion->set_y_pos(y_pos_ - height_frame_/2-10);
 	p_explosion->LoadImg("img//explosion_spritesheet.png",des);
 	p_explosion->set_clips();
-	
+}
+
+void MainObject::ResetPlayer() {
+	input_type_.left_ = 0;
+	input_type_.right_ = 0;
+	input_type_.up_ = 0;
+	input_type_.down_ = 0;
+	spawn_time = SDL_GetTicks();
 }
